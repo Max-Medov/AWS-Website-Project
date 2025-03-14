@@ -22,6 +22,14 @@ data "aws_route_table" "existing_private_rt" {
   }
 }
 
+data "aws_route_table" "existing_public_rt" {
+  filter {
+    name   = "tag:Name"
+    values = ["Public-RT-US"]
+  }
+}
+
+
 # FortiGate Elastic IP
 resource "aws_eip" "fgt_eip" {
   domain = "vpc"
@@ -95,7 +103,7 @@ resource "aws_network_interface" "fgt_public_eni" {
 resource "aws_network_interface" "fgt_private_eni" {
   subnet_id         = data.aws_subnet.private_subnet.id
   description       = "FortiGate Private Interface"
-  source_dest_check = false
+  source_dest_check = true
   security_groups   = [aws_security_group.fortigate_sg.id]
   tags              = { Name = "FortiGate Private Interface" }
 }
@@ -154,6 +162,7 @@ resource "aws_route" "vpn_route" {
   destination_cidr_block = "10.1.4.0/22"
   network_interface_id   = aws_network_interface.fgt_private_eni.id
 }
+
 
 # Outputs explicitly for Username/Password
 output "fortigate_username" {
