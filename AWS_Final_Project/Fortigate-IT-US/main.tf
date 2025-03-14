@@ -164,9 +164,5 @@ output "fortigate_password" {
   value = aws_instance.fgtvm.id
 }
 
-output "fortigate_public_ip" {
-  value = aws_eip.fgt_eip.public_ip
-}
-
 
 
