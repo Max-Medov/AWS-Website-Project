@@ -12,6 +12,6 @@ variable "aws_profile" {
 }
 
 variable "bucket_name" {
-  default = "lovely-company-maxmedov" # Explicitly use your unique suffix explicitly
+  default = "lovely-company-files-maxmedov"  # explicitly set your unique bucket name
 }
 
