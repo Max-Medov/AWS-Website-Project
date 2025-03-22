@@ -1,7 +1,7 @@
 [
   {
     "name": "wordpress",
-    "image": "public.ecr.aws/wordpress:latest",
+    "image": "public.ecr.aws/docker/library/wordpress:latest",
     "essential": true,
     "portMappings": [
       {
@@ -26,11 +26,11 @@
     "secrets": [
       {
         "name": "WORDPRESS_DB_USER",
-        "valueFrom": "${secret_arn}:username"
+        "valueFrom": "${secret_arn}:username::"
       },
       {
         "name": "WORDPRESS_DB_PASSWORD",
-        "valueFrom": "${secret_arn}:password"
+        "valueFrom": "${secret_arn}:password::"
       }
     ]
   }

@@ -50,6 +50,11 @@ resource "aws_iam_role_policy_attachment" "ecs_exec_attach" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
+resource "aws_iam_role_policy_attachment" "ecs_exec_secretsmanager_access" {
+  role       = aws_iam_role.ecs_execution_role.name
+  policy_arn = "arn:aws:iam::aws:policy/SecretsManagerReadWrite"
+}
+
 resource "aws_iam_role" "ecs_task_role" {
   name               = "ecsTaskRole"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
