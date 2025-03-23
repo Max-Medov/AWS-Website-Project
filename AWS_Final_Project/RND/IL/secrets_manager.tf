@@ -1,5 +1,5 @@
 resource "aws_secretsmanager_secret" "db_secret" {
-  name        = "wp-db-credentials-il"
+  name        = "wp-db-credentials-il-2"
   description = "DB credentials for WordPress IL region"
 }
 

@@ -5,7 +5,7 @@
 ##########################################################
 
 resource "aws_secretsmanager_secret" "db_secret" {
-  name        = "wp-db-credentials-v3"
+  name        = "wp-db-credentials-v4"
   description = "Stores DB credentials for WordPress"
 }
 

@@ -29,6 +29,8 @@ resource "aws_db_instance" "wp_db" {
   publicly_accessible     = false
   skip_final_snapshot     = true
 
+  backup_retention_period = 7  # 7 days of backups
+
   # Temporary credentials - typically replaced by Secrets Manager
   username = var.db_username
   password = var.db_password
