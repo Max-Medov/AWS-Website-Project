@@ -1,47 +1,77 @@
 ##############################################################################
 # EU/failover_alarm_sns.tf
 ##############################################################################
-# If you're already in the same region as your ALB (e.g., eu-west-1),
-# make sure the provider here also says region = "eu-west-1"
+# Assumes you already have an AWS provider here with region = "eu-west-1"
+# and that your ALB + Target Group are defined in the same folder,
+# for example in alb_acm.tf.
 
-# 1) SNS Topic in EU
+#############################################################
+# Input variable: We will eventually pass in the US Lambda ARN
+#############################################################
+variable "us_lambda_arn" {
+  type        = string
+  description = "The ARN of the US Lambda to subscribe for failover"
+  default     = "" # If you don't have it yet, you can leave it blank initially
+}
+
+#############################################################
+# SNS Topic in EU
+#############################################################
 resource "aws_sns_topic" "failover_topic" {
   name = "eu-failover-topic"
 }
 
-# 2) CloudWatch Alarm: checks "HealthyHostCount" for your ALB+TargetGroup
+#############################################################
+# CloudWatch Alarm for ALB -> triggers SNS
+# (HealthyHostCount <1 for 1 data point of 30s => ALARM)
+#############################################################
 resource "aws_cloudwatch_metric_alarm" "alb_unhealthy_alarm" {
   alarm_name          = "alb-0-healthy-hosts"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 2
+  evaluation_periods  = 1
   metric_name         = "HealthyHostCount"
   namespace           = "AWS/ApplicationELB"
-  period              = 60
+  period              = 30
   statistic           = "Average"
   threshold           = 1
-  alarm_description   = "Triggers when the ALB has 0 healthy hosts for 2 consecutive intervals."
-
-  # Trigger the SNS topic when alarm goes to ALARM
+  alarm_description   = "Triggers when ALB has 0 healthy hosts for 30s"
+# Force 'missing' data to be treated as ALARM
+  treat_missing_data  = "breaching"
+  
   alarm_actions = [
     aws_sns_topic.failover_topic.arn
   ]
 
-  # Automatic dimension references:
-  #   - 'arn_suffix' on aws_lb gives "app/wp-rnd-alb/0452cbbf018d407a"
-  #   - 'arn_suffix' on aws_lb_target_group gives "targetgroup/wp-tg/29817ffcc3950121"
+  # Use the ALB + TG arn_suffix from your alb_acm.tf
   dimensions = {
     LoadBalancer = aws_lb.wp_alb.arn_suffix
     TargetGroup  = aws_lb_target_group.wp_tg.arn_suffix
   }
 
-  # Make sure the ALB + TG are created first
   depends_on = [
     aws_lb.wp_alb,
     aws_lb_target_group.wp_tg
   ]
 }
 
-# 3) Output the SNS ARN (if needed by IL stack)
+#############################################################
+# Automatically subscribe the US Lambda to the EU SNS topic
+#############################################################
+resource "aws_sns_topic_subscription" "us_lambda_sub" {
+  # If the user didn't provide a us_lambda_arn, count=0 => subscription isn't created.
+  count = var.us_lambda_arn == "" ? 0 : 1
+  
+  topic_arn = aws_sns_topic.failover_topic.arn
+  protocol  = "lambda"
+  endpoint  = var.us_lambda_arn  # The US Lambda's ARN
+
+  # If you see any cross-region issues, you can add:
+  # confirmation_timeout_in_minutes = 5
+}
+
+#############################################################
+# Output the SNS ARN if you need it in the US stack
+#############################################################
 output "sns_topic_arn" {
   description = "The ARN of the EU SNS topic used for failover"
   value       = aws_sns_topic.failover_topic.arn

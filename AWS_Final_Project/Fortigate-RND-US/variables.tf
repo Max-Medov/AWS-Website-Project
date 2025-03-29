@@ -1,9 +1,9 @@
 variable "region" {
-  default = "us-east-2"
+  default = "us-east-1"
 }
 
 variable "fgt_ami" {
-  default = "ami-05d0267b6971d9de3"  # FortiGate AMI explicitly (payg, x86 clearly in Ohio region explicitly)
+  default = "ami-039592fdb85a7379d"  # FortiGate AMI explicitly (payg, x86 clearly in Ohio region explicitly)
 }
 
 variable "instance_type" {
@@ -11,7 +11,7 @@ variable "instance_type" {
 }
 
 variable "az" {
-  default = "us-east-2a"
+  default = "us-east-1a"
 }
 
 variable "key_name" {

@@ -1,7 +1,7 @@
 variable "region" {
   type        = string
   description = "AWS IL Region"
-  default     = "il-central-1"
+  default     = "us-east-1"
 }
 
 variable "aws_profile" {
@@ -14,11 +14,11 @@ variable "vpc_cidr" {
 }
 
 variable "az" {
-  default = "il-central-1a"
+  default = "us-east-1a"
 }
 
 variable "az2" {
-  default = "il-central-1b"
+  default = "us-east-1b"
 }
 
 variable "public_subnet_cidr" {
@@ -30,11 +30,11 @@ variable "public_subnet_cidr_2" {
 }
 
 variable "private_subnet_cidr" {
-  default = "10.2.4.0/24"
+  default = "10.2.4.0/22"
 }
 
 variable "private_subnet_cidr_2" {
-  default = "10.2.5.0/24"
+  default = "10.2.8.0/22"
 }
 
 variable "db_name" {
@@ -50,6 +50,6 @@ variable "db_password" {
 }
 
 variable "wp_domain_name" {
-  default = "wp-il.medov.click"
+  default = "wp-us.medov.click"
 }
 

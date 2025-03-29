@@ -8,7 +8,7 @@ data "template_file" "wp_container_def" {
 }
 
 resource "aws_ecs_cluster" "wp_cluster" {
-  name = "wp-rnd-cluster-il"
+  name = "wp-rnd-cluster-us"
 }
 
 resource "aws_ecs_cluster_capacity_providers" "wp_cluster_providers" {
@@ -26,7 +26,7 @@ resource "aws_ecs_cluster_capacity_providers" "wp_cluster_providers" {
 ########################################
 
 resource "aws_iam_role" "ecs_execution_role" {
-  name               = "ecsExecutionRole-IL"
+  name               = "ecsExecutionRole-US"
   assume_role_policy = data.aws_iam_policy_document.ecs_execution_assume_role.json
 }
 
@@ -51,7 +51,7 @@ resource "aws_iam_role_policy_attachment" "ecs_exec_secretsmanager_access" {
 }
 
 resource "aws_iam_role" "ecs_task_role" {
-  name               = "ecsTaskRole-IL"
+  name               = "ecsTaskRole-US"
   assume_role_policy = data.aws_iam_policy_document.ecs_task_assume_role.json
 }
 
@@ -66,7 +66,7 @@ data "aws_iam_policy_document" "ecs_task_assume_role" {
 }
 
 resource "aws_iam_role_policy" "ecs_task_secrets_policy" {
-  name = "ecsTaskSecretsPolicy-IL"
+  name = "ecsTaskSecretsPolicy-US"
   role = aws_iam_role.ecs_task_role.id
   policy = data.aws_iam_policy_document.ecs_task_secrets_doc.json
 }
@@ -85,7 +85,7 @@ data "aws_iam_policy_document" "ecs_task_secrets_doc" {
 
 
 resource "aws_ecs_task_definition" "wp_task" {
-  family                   = "wp-rnd-task-il"
+  family                   = "wp-rnd-task-us"
   network_mode             = "awsvpc"
   requires_compatibilities = ["FARGATE"]
   cpu                      = 256
@@ -102,7 +102,7 @@ resource "aws_ecs_task_definition" "wp_task" {
 }
 
 resource "aws_ecs_service" "wp_service" {
-  name            = "wp-service-il"
+  name            = "wp-service-us"
   cluster         = aws_ecs_cluster.wp_cluster.id
   task_definition = aws_ecs_task_definition.wp_task.arn
   desired_count   = 2

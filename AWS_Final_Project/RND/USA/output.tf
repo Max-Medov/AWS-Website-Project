@@ -18,8 +18,8 @@ output "alb_dns_name" {
   value = aws_lb.wp_alb.dns_name
 }
 
-# IL Replica Endpoint (Corrected)
-output "il_rds_replica_endpoint" {
+# US Replica Endpoint (Corrected)
+output "us_rds_replica_endpoint" {
   value = aws_db_instance.wp_db_replica.address
 }
 

@@ -37,7 +37,7 @@ variable "public_subnet_cidr" {
 variable "private_subnet_cidr" {
   type        = string
   description = "CIDR for the first private subnet"
-  default     = "10.1.4.0/24"
+  default     = "10.1.4.0/22"
 }
 
 ########################################
@@ -58,7 +58,7 @@ variable "public_subnet_cidr_2" {
 variable "private_subnet_cidr_2" {
   type        = string
   description = "CIDR for the second private subnet"
-  default     = "10.1.5.0/24"
+  default     = "10.1.8.0/22"
 }
 
 ########################################

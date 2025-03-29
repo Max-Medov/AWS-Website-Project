@@ -1,5 +1,5 @@
 resource "aws_kms_key" "rds_replica_key" {
-  description         = "KMS Key for RDS Replica Encryption (IL Region)"
+  description         = "KMS Key for RDS Replica Encryption (US Region)"
   deletion_window_in_days = 10
   enable_key_rotation = true
 }
