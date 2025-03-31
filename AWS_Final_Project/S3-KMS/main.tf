@@ -9,12 +9,45 @@ provider "aws" {
   profile = var.aws_profile
 }
 
+data "aws_caller_identity" "current" {}
+
 # Create KMS Key in Primary Region
 resource "aws_kms_key" "lovely_kms" {
   description             = "Lovely company primary symmetric encryption key"
   deletion_window_in_days = 10
   enable_key_rotation     = true
   tags                    = { Name = "Lovely-KMS-Key" }
+  
+  
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [
+      {
+        Sid = "AllowFullAccessForRoot",
+        Effect = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:root"
+        },
+        Action = "kms:*",
+        Resource = "*"
+      },
+      {
+        Sid = "AllowEC2RoleToUseKMS",
+        Effect = "Allow",
+        Principal = {
+          AWS = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/IT-EC2-Flask-Role"
+        },
+        Action = [
+          "kms:Encrypt",
+          "kms:Decrypt",
+          "kms:ReEncrypt*",
+          "kms:GenerateDataKey*",
+          "kms:DescribeKey"
+        ],
+        Resource = "*"
+      }
+    ]
+  })
 }
 
 # Create KMS Alias for Primary Key

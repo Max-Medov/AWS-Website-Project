@@ -50,6 +50,6 @@ variable "db_password" {
 }
 
 variable "wp_domain_name" {
-  default = "wp-us.medov.click"
+  default = "main-wp.medov.click"
 }
 

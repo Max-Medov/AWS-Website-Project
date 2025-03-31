@@ -28,13 +28,13 @@ resource "aws_sns_topic" "failover_topic" {
 resource "aws_cloudwatch_metric_alarm" "alb_unhealthy_alarm" {
   alarm_name          = "alb-0-healthy-hosts"
   comparison_operator = "LessThanThreshold"
-  evaluation_periods  = 1
+  evaluation_periods  = 2
   metric_name         = "HealthyHostCount"
   namespace           = "AWS/ApplicationELB"
   period              = 30
   statistic           = "Average"
   threshold           = 1
-  alarm_description   = "Triggers when ALB has 0 healthy hosts for 30s"
+  alarm_description   = "Triggers when ALB has 0 healthy hosts for 60s"
 # Force 'missing' data to be treated as ALARM
   treat_missing_data  = "breaching"
   

@@ -83,6 +83,6 @@ variable "db_password" {
 variable "wp_domain_name" {
   type        = string
   description = "Domain name for WordPress (must match the ACM certificate)"
-  default     = "wp.medov.click"
+  default     = "main-wp.medov.click"
 }
 
